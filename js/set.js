@@ -4,10 +4,10 @@ $('document').ready(function () {
 
 	// Build the deck... total of 81 cards.
 	// Each card has 3 options for number, color, shape, and texture
-	var numberOptions = ["one", "two", "three"];
-	var colorOptions = ["red", "green", "purple"];
-	var shapeOptions = ["diamond", "oval", "squiggle"];
-	var textureOptions = ["solid", "transparent", "striped"];
+	var numberOptions = ["1", "2", "3"];
+	var colorOptions = ["#BA1E1E", "#1EBA20", "#7636C9"];
+	var shapeOptions = ["0", "1", "2"];
+	var textureOptions = ["1", ".3", "0"];
 	var cardFeatures = [numberOptions, colorOptions, shapeOptions, textureOptions];
 
 	// Build combinations
@@ -23,14 +23,17 @@ $('document').ready(function () {
 
 	// Build cards
 	for ( var i=0; i<featureSets.length; i++ ) {
-		var newCard = document.createElement('div');
+		var cardWrapper = document.createElement('div');
 		var featureSet = featureSets[i];
-		$(newCard).addClass('card')
-			.attr('data-number', numberOptions[featureSet[0]]).append(numberOptions[featureSet[0]] + "<br>")
-			.attr('data-color', colorOptions[featureSet[1]]).append(colorOptions[featureSet[1]] + "<br>")
-			.attr('data-shape', shapeOptions[featureSet[2]]).append(shapeOptions[featureSet[2]] + "<br>")
-			.attr('data-texture', textureOptions[featureSet[3]]).append(textureOptions[featureSet[3]] + "<br>");
-		$('#deck').append(newCard);
+		var newCard = Raphael(cardWrapper, 250, 100);
+		$(cardWrapper).addClass('card');
+		$(newCard).add($(cardWrapper))
+			.attr('data-number', numberOptions[featureSet[0]])
+			.attr('data-color', colorOptions[featureSet[1]])
+			.attr('data-shape', shapeOptions[featureSet[2]])
+			.attr('data-texture', textureOptions[featureSet[3]]);
+		renderCard(newCard);
+		$('#deck').append(cardWrapper);
 	}
 
 	// Draw a card
@@ -48,6 +51,7 @@ $('document').ready(function () {
 
 	// Select cards to check
 	$(document).on( 'click', '#card-table .card', function () {
+		console.log('hello?');
 		if ($(this).hasClass('selected')) {
 			$(this).removeClass('selected');
 		} else if ($('.selected').length < 3) {
@@ -76,7 +80,7 @@ $('document').ready(function () {
 
 			if ( numberSet && colorSet && shapeSet && textureSet ) {
 				alert('Set!');
-				$set.appendTo('#discard-pile');
+				$set.removeClass('selected').appendTo('#discard-pile');
 				if ( $('#card-table .card').length < 9 ) {
 					for ( var i=0; i<3; i++ ) {
 						drawCard();
